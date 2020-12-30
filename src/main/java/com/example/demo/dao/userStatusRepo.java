@@ -73,7 +73,7 @@ public class userStatusRepo {
 		}
 		SQL.append("  ) AS wData ");
 		SQL.append(" ORDER BY createdTimestamp ASC ");
-
+		System.out.println(lighttpd);
 		System.out.println(SQL.toString());
 		System.out.println("commiting No yes!!!!!!!!");
 
