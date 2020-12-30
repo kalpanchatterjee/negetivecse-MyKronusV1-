@@ -41,4 +41,10 @@ public class TaskController {
 		List<TaskModel> taskDetails=ts.taskDetails(tm);
 		return taskDetails;
 	}
+	@PostMapping("/updatePriority")
+	public List<TaskModel> updatePriority(@RequestBody  TaskModel tm) {
+		List<TaskModel> updatePriority=ts.updatePriority(tm);
+		return updatePriority;
+	}
+	
 }
