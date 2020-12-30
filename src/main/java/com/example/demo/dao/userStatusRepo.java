@@ -129,7 +129,7 @@ public class userStatusRepo {
 				} catch (Exception e) {
 					prevHrs= "";
 				}
-				System.out.println("prev Hours::::"+prevHrs);
+				System.out.println("prev Hours::::::++--> "+prevHrs);
 				if(!prevHrs.equals("")){
 					SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 					java.util.Date t1 = null;
