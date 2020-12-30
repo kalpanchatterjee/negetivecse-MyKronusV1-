@@ -33,6 +33,11 @@ public class TaskService {
 		List<TaskModel> taskDetails=tr.taskDetails(tm);
 		return taskDetails;
 	}
+
+	public List<TaskModel> updatePriority(TaskModel tm) {
+		List<TaskModel> updatePriority=tr.updatePriority(tm);
+		return updatePriority;
+	}
 	
 
 	
