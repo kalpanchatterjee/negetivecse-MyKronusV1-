@@ -106,7 +106,7 @@ public class userStatusRepo {
 		} catch (Exception e) {
 			prevStatus= "";
 		}
-		System.out.println("--->"+prevStatus);
+		System.out.println("--->++"+prevStatus);
 		String prevHrs="";
 		boolean insertFlag=true;
 		if( (prevStatus.equals("") && udm.getSTATUS().equals("start")) 
