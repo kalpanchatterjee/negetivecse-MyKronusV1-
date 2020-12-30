@@ -34,9 +34,15 @@ public class TaskService {
 		return taskDetails;
 	}
 
+
 	public List<TaskModel> editTask(TaskModel tm) {
 		List<TaskModel> editedTaskDetails=tr.editTask(tm);
 		return editedTaskDetails;
+	}
+	public List<TaskModel> updatePriority(TaskModel tm) {
+		List<TaskModel> updatePriority=tr.updatePriority(tm);
+		return updatePriority;
+
 	}
 	
 

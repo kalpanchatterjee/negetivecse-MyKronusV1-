@@ -389,6 +389,7 @@ public class TaskRepo {
 		return taskDetails;
 	}
 
+
 	public List<TaskModel> editTask(TaskModel tm) {
 		StringBuilder sql=new StringBuilder();
 		String taskId = (tm.getTask_id()!=null && !tm.getTask_id().equals("")) ? tm.getTask_id():"";
@@ -413,6 +414,31 @@ public class TaskRepo {
 			e.printStackTrace();
 		}
 		return editedTaskDetails;
+	}
+	public List<TaskModel> updatePriority(TaskModel tm) {
+		
+		String taskId = tm.getTask_id();
+		String priority_id = tm.getPriority_id();
+		String sessUserId =tm.getUser_id();
+		List<TaskModel> updatePriorityTaskDetails =null;
+		StringBuilder sql = new StringBuilder();
+		try {
+			sql.append(" UPDATE co_mykronus_tasks  ");
+			sql.append(" SET priority_id='"+priority_id+"'");
+			sql.append(" , last_updated_date= '"+ Utilcollection.getDate()+"'");
+			sql.append(" , last_updated_timestamp=  '"+Utilcollection.getTimeStamp()+"'");
+			sql.append(" , last_updated_by="+sessUserId);
+			sql.append("  WHERE task_id="+taskId);
+			jdbctm.update(sql.toString());
+			updatePriorityTaskDetails= getTaskDetails(tm);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+		return updatePriorityTaskDetails;
+
 	}
 
 }
