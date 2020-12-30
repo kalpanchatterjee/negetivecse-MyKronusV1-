@@ -344,6 +344,7 @@ public class TaskRepo {
 					sql1.append("  (SELECT MIN(created_timestamp) from co_mykronus_tasks_details where task_id="+tm.getTask_id()+" AND task_status='Inprogress' ) ");
 					sql1.append(" ) ) ");
 					elapsed_time=jdbctm.queryForObject(sql1.toString(), String.class);
+					System.out.println(sql1.toString());
 					String sqlInsert1="   UPDATE co_mykronus_tasks SET elapsed_time= '"+elapsed_time+"' WHERE task_id="+tm.getTask_id();
 					jdbctm.update(sqlInsert1);
 				}
