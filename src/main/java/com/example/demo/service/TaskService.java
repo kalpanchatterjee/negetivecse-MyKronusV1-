@@ -33,6 +33,11 @@ public class TaskService {
 		List<TaskModel> taskDetails=tr.taskDetails(tm);
 		return taskDetails;
 	}
+
+	public List<TaskModel> editTask(TaskModel tm) {
+		List<TaskModel> editedTaskDetails=tr.editTask(tm);
+		return editedTaskDetails;
+	}
 	
 
 	

@@ -41,4 +41,9 @@ public class TaskController {
 		List<TaskModel> taskDetails=ts.taskDetails(tm);
 		return taskDetails;
 	}
+	@PostMapping("/editTask")
+	public List<TaskModel> editTask(@RequestBody  TaskModel tm) {
+		List<TaskModel> editedTaskDetails=ts.editTask(tm);
+		return editedTaskDetails;
+	}
 }
