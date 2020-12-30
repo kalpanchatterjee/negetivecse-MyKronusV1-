@@ -46,6 +46,7 @@ public class TaskRepo {
 		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
 
 		String taskId=(tm.getTask_id()!=null && !tm.getTask_id().equals("")) ? tm.getTask_id() :"";
+		System.out.println(taskId);
 		String serverTimeZone = Utilcollection.getServerTimeZone();
 
 		StringBuilder sql=new StringBuilder();
@@ -135,7 +136,7 @@ public class TaskRepo {
 			sql.append("  IFNULL(group_name,'Z') ASC, cmt.created_timestamp DESC ");
 
 		}
-
+		System.out.println(sql.toString());
 		List<TaskModel> getTaskDetails=jdbctm.query(sql.toString(), BeanPropertyRowMapper.newInstance(TaskModel.class));
 
 
@@ -388,6 +389,32 @@ public class TaskRepo {
 		return taskDetails;
 	}
 
+
+	public List<TaskModel> editTask(TaskModel tm) {
+		StringBuilder sql=new StringBuilder();
+		String taskId = (tm.getTask_id()!=null && !tm.getTask_id().equals("")) ? tm.getTask_id():"";
+		String userId=tm.getUser_id();
+		String groupId = (tm.getGroup_id()!=null && !tm.getGroup_id().equals("")) ? tm.getGroup_id() :"";
+		String dueDate = (tm.getTaskDueDate()!=null && !tm.getTaskDueDate().equals("")) ? tm.getTaskDueDate() :"";
+		String taskName=(tm.getTask_name()!=null && !tm.getTask_name().equals("")) ? tm.getTask_name() :"";
+		
+		List<TaskModel> editedTaskDetails=null;
+		try {
+			sql.append(" UPDATE co_mykronus_tasks  ");
+			sql.append(" SET task_name='"+taskName+"'");
+			sql.append(" ,task_due_by_date='"+dueDate+"'");
+			sql.append(" ,task_group='"+groupId+"'");
+			sql.append(" ,last_updated_date= '"+(java.sql.Date) Utilcollection.getDate()+"'");
+			sql.append(" ,last_updated_timestamp=  '"+Utilcollection.getTimeStamp()+"'");
+			sql.append(" ,last_updated_by="+userId);
+			sql.append("  WHERE task_id="+taskId);
+			jdbctm.update(sql.toString());
+			editedTaskDetails=getTaskDetails(tm);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return editedTaskDetails;
+	}
 	public List<TaskModel> updatePriority(TaskModel tm) {
 		
 		String taskId = tm.getTask_id();
@@ -411,6 +438,7 @@ public class TaskRepo {
 			
 		}
 		return updatePriorityTaskDetails;
+
 	}
 
 }
