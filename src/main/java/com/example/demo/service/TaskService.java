@@ -28,6 +28,11 @@ public class TaskService {
 	    List<TaskModel> updatedTaskDetails=tr.updateTask(tm);
     	return updatedTaskDetails;
 	}
+
+	public List<TaskModel> taskDetails(TaskModel tm) {
+		List<TaskModel> taskDetails=tr.taskDetails(tm);
+		return taskDetails;
+	}
 	
 
 	
