@@ -42,8 +42,14 @@ public class TaskModel {
 	private String localoffsetTimeZone;
 	private String task_detail_id;
 	private String actual_time;
+	private String updateType;
 	
-	
+	public String getUpdateType() {
+		return updateType;
+	}
+	public void setUpdateType(String updateType) {
+		this.updateType = updateType;
+	}
 	public String getTask_detail_id() {
 		return task_detail_id;
 	}
