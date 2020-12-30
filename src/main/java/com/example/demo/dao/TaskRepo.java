@@ -1,11 +1,15 @@
 package com.example.demo.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.TaskModel;
@@ -156,6 +160,76 @@ public class TaskRepo {
 		}
 		return getTaskDetails;
 
+	}
+
+
+
+	public List<TaskModel> createTask(TaskModel tm) {
+		String taskName=tm.getTask_name();
+		String groupId = (tm.getGroup_id()!=null && !tm.getGroup_id().equals("")) ? tm.getGroup_id() :"";
+		String dueDate = (tm.getTaskDueDate()!=null && !tm.getTaskDueDate().equals("")) ? tm.getTaskDueDate() :"";
+		String userId=tm.getUser_id();
+		String companyId=tm.getCompany_id();
+		String localoffsetTimeZone = (tm.getLocaloffsetTimeZone()!=null && !tm.getLocaloffsetTimeZone().equals("")) ? tm.getLocaloffsetTimeZone() :"";
+		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
+		StringBuilder sql=new StringBuilder();
+		try {
+			sql.append("INSERT INTO co_mykronus_tasks (task_name,task_status,company_id,created_by,created_date,created_timestamp,task_due_by_date, task_group)");
+			sql.append("VALUES(?,?,?,?,?,?,?,?)");
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			int ctr=0;
+			ctr = jdbctm.update(
+					connection -> {
+						PreparedStatement ps = connection.prepareStatement(sql.toString(),Statement.RETURN_GENERATED_KEYS);
+						ps.setString(1,taskName );
+						ps.setString(2,  "Created" );
+						ps.setString(3, companyId);
+						ps.setString(4,userId);
+						ps.setDate(5, Utilcollection.getDate());
+						ps.setTimestamp(6, Utilcollection.getTimeStamp());
+						if(dueDate.equals("")) {
+							ps.setDate(7, Utilcollection.getDate());
+						}else {
+							ps.setString  (7, dueDate);
+						}
+						
+						ps.setString(8, groupId);
+						
+						return ps;
+					}, keyHolder);
+				if(ctr != 0){
+					
+					Number key = keyHolder.getKey();
+					System.out.println("----> "+key.intValue());
+					StringBuilder sql1=new StringBuilder();
+					sql1.append("INSERT INTO co_mykronus_tasks_details (task_id,task_status,company_id,created_by,created_date,last_updated_date,last_updated_timestamp,last_updated_by,created_timestamp) ");
+					sql1.append("VALUES(?,?,?,?,?,?,?,?,?)");
+					ctr = jdbctm.update(
+							connection -> {
+								PreparedStatement ps = connection.prepareStatement(sql1.toString(),Statement.RETURN_GENERATED_KEYS);
+								ps.setLong(1, key.intValue());
+								ps.setString(2, "Created");
+								ps.setString(3, companyId);
+								ps.setString(4,userId);
+								ps.setDate(5, Utilcollection.getDate());
+								ps.setDate(6, Utilcollection.getDate());
+								ps.setTimestamp(7, Utilcollection.getTimeStamp());
+								ps.setString(8, userId);
+								ps.setTimestamp(9, Utilcollection.getTimeStamp());
+								
+								
+								return ps;
+							}, keyHolder);
+							
+					tm.setTask_id( String.valueOf(key.intValue()));
+					
+				}
+			
+		}catch (Exception e) {
+			
+		}
+		List<TaskModel>newTaskDetails=getTaskDetails(tm);
+		return newTaskDetails;
 	}
 
 }
