@@ -240,6 +240,7 @@ public class TaskRepo {
 		List<TaskModel>updatedTaskDetails=null;
 		StringBuilder sql=new StringBuilder();
 		String status = (tm.getTask_status()!=null && !tm.getTask_status().equals("")) ? tm.getTask_status() :"";
+		System.out.println("status-->"+status);
 		try {
 			if(status.equals("Created")) {
 
