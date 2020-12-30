@@ -77,6 +77,7 @@ public class userStatusRepo {
 		System.out.println(SQL.toString());
 
 		List<userModel> userStatusList=jdbctm.query(SQL.toString(), BeanPropertyRowMapper.newInstance(userModel.class));
+		System.out.println(lighttpd);
 		return userStatusList;
 	}
 	
