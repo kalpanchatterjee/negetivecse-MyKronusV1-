@@ -39,9 +39,16 @@ public class TaskModel {
 	private String imageUrl;
 	private String actTimeDetail;
 	private String Tasktimestamp;
+	private String localoffsetTimeZone;
 	
 	
 	
+	public String getLocaloffsetTimeZone() {
+		return localoffsetTimeZone;
+	}
+	public void setLocaloffsetTimeZone(String localoffsetTimeZone) {
+		this.localoffsetTimeZone = localoffsetTimeZone;
+	}
 	public String getTasktimestamp() {
 		return Tasktimestamp;
 	}

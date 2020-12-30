@@ -14,13 +14,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.model.userModel;
+import com.example.demo.model.UserModel;
 import com.example.demo.util.Utilcollection;
 
 
 
 @Repository
-public class userStatusRepo {
+public class UserStatusRepo {
 	
 	@Autowired
 	JdbcTemplate jdbctm;
@@ -28,7 +28,7 @@ public class userStatusRepo {
 	private String lighttpd;
 	
 	
-	public List<userModel> getUserStatusDetails(userModel udm){
+	public List<UserModel> getUserStatusDetails(UserModel udm){
 		
 		String localoffsetTimeZone = (udm.getLocaloffsetTimeZone()!=null && !udm.getLocaloffsetTimeZone().equals("")) ? udm.getLocaloffsetTimeZone() :"";
 		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
@@ -77,14 +77,14 @@ public class userStatusRepo {
 		System.out.println(SQL.toString());
 		System.out.println("commiting No yes!!!!!!!!");
 
-		List<userModel> userStatusList=jdbctm.query(SQL.toString(), BeanPropertyRowMapper.newInstance(userModel.class));
+		List<UserModel> userStatusList=jdbctm.query(SQL.toString(), BeanPropertyRowMapper.newInstance(UserModel.class));
 		System.out.println(lighttpd);
 		return userStatusList;
 	}
 	
 	
 
-	public String updateUserStatus(userModel udm){
+	public String updateUserStatus(UserModel udm){
 		String result="";
 		if(udm.getSTATUS().equals("pause")){
 			udm.setSTATUS("break_start");
