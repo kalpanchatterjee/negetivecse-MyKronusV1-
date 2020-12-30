@@ -19,6 +19,11 @@ public class TaskService {
 		return getTaskDetails;	
 	}
 
+	public List<TaskModel> createTask(TaskModel tm) {
+		List<TaskModel> createTask=tr.createTask(tm);  
+		return createTask;
+	}
+
 	
 	
 }
