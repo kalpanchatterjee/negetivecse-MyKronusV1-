@@ -31,6 +31,9 @@ public class UserStatusRepo {
 	public List<UserModel> getUserStatusDetails(UserModel udm){
 		
 		String localoffsetTimeZone = (udm.getLocaloffsetTimeZone()!=null && !udm.getLocaloffsetTimeZone().equals("")) ? udm.getLocaloffsetTimeZone() :"";
+		if( localoffsetTimeZone.equals("")){
+			localoffsetTimeZone="19800";
+		}
 		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
 		StringBuilder SQL=new StringBuilder();
 		SQL.append(" SELECT * FROM ( ");
@@ -94,6 +97,9 @@ public class UserStatusRepo {
 		}
 
 		String localoffsetTimeZone = (udm.getLocaloffsetTimeZone()!=null && !udm.getLocaloffsetTimeZone().equals("")) ? udm.getLocaloffsetTimeZone() :"";
+		if( localoffsetTimeZone.equals("")){
+			localoffsetTimeZone="19800";
+		}
 		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
 
 		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);

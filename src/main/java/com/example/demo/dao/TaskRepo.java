@@ -40,6 +40,9 @@ public class TaskRepo {
 		userId=tm.getUser_id();
 		companyId=tm.getCompany_id();
 		String localoffsetTimeZone = (tm.getLocaloffsetTimeZone()!=null && !tm.getLocaloffsetTimeZone().equals("")) ? tm.getLocaloffsetTimeZone() :"";
+		if( localoffsetTimeZone.equals("")){
+			localoffsetTimeZone="19800";
+		}
 		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
 
 		String taskId=(tm.getTask_id()!=null && !tm.getTask_id().equals("")) ? tm.getTask_id() :"";
@@ -169,6 +172,9 @@ public class TaskRepo {
 		String userId=tm.getUser_id();
 		String companyId=tm.getCompany_id();
 		String localoffsetTimeZone = (tm.getLocaloffsetTimeZone()!=null && !tm.getLocaloffsetTimeZone().equals("")) ? tm.getLocaloffsetTimeZone() :"";
+		if( localoffsetTimeZone.equals("")){
+			localoffsetTimeZone="19800";
+		}
 		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
 		StringBuilder sql=new StringBuilder();
 		try {
@@ -356,6 +362,30 @@ public class TaskRepo {
 		}
 		return updatedTaskDetails;
 
+	}
+
+	public List<TaskModel> taskDetails(TaskModel tm) {
+		String taskId = (tm.getTask_id()!=null && !tm.getTask_id().equals("")) ? tm.getTask_id():"";
+		String localoffsetTimeZone = (tm.getLocaloffsetTimeZone()!=null && !tm.getLocaloffsetTimeZone().equals("")) ? tm.getLocaloffsetTimeZone() :"";
+		if( localoffsetTimeZone.equals("")){
+			localoffsetTimeZone="19800";
+		}
+		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
+		StringBuilder sql=new StringBuilder();
+		sql.append(" SELECT cmtd.task_detail_id, cmtd.task_id, cmtd.task_status, IFNULL(cmtd.actual_time,'-') AS actual_time, cmtd.actual_time_modified, ");
+		//sql.append(" IFNULL(DATE_FORMAT(CONVERT_TZ(task_end_time,'"+UtilCollections.getServerTimeZone()+"','"+localoffsetTimeZone+"'),'%h:%i %p'),'')AS 'endTime',");
+		sql.append(" 	IFNULL ( DATE_FORMAT(CONVERT_TZ(cmtd.created_timestamp, '"+Utilcollection.getServerTimeZone()+"', ifnull(cu.user_timezone, '"+localoffsetTimeZone+"') ),'%b %d %Y'),'') AS 'startDate',");
+		sql.append("  	IFNULL ( DATE_FORMAT(CONVERT_TZ(cmtd.created_timestamp,'"+Utilcollection.getServerTimeZone()+"',  ifnull(cu.user_timezone, '"+localoffsetTimeZone+"') ),'%h:%i %p'),'') AS 'startTime',");
+		sql.append("  	IFNULL ( DATE_FORMAT(CONVERT_TZ(cmtd.created_timestamp,'"+Utilcollection.getServerTimeZone()+"',  ifnull(cu.user_timezone, '"+localoffsetTimeZone+"') ),'%H:%i:%s'),'') AS 'startTime',");
+		sql.append("   IFNULL (cmtd.elapsed_time,'') AS elapsed_time,cmtd.created_by");
+		sql.append("  FROM co_mykronus_tasks_details cmtd ");
+		sql.append("  JOIN co_users cu ON cu.user_id = cmtd.created_by	");
+		sql.append("  WHERE cmtd.task_id="+taskId);
+		sql.append("    AND cmtd.task_status NOT IN('Created')");
+		//sql.append("  ORDER BY cmtd.created_timestamp DESC ");
+		sql.append("  ORDER BY cmtd.task_detail_id DESC ");
+		List<TaskModel> taskDetails= jdbctm.query(sql.toString(),BeanPropertyRowMapper.newInstance(TaskModel.class));
+		return taskDetails;
 	}
 
 }

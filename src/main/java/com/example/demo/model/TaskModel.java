@@ -40,9 +40,22 @@ public class TaskModel {
 	private String actTimeDetail;
 	private String Tasktimestamp;
 	private String localoffsetTimeZone;
+	private String task_detail_id;
+	private String actual_time;
 	
 	
-	
+	public String getTask_detail_id() {
+		return task_detail_id;
+	}
+	public void setTask_detail_id(String task_detail_id) {
+		this.task_detail_id = task_detail_id;
+	}
+	public String getActual_time() {
+		return actual_time;
+	}
+	public void setActual_time(String actual_time) {
+		this.actual_time = actual_time;
+	}
 	public String getLocaloffsetTimeZone() {
 		return localoffsetTimeZone;
 	}
