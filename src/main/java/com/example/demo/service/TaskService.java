@@ -18,11 +18,17 @@ public class TaskService {
 		List<TaskModel> getTaskDetails=tr.getTaskDetails(tm);  
 		return getTaskDetails;	
 	}
+	
+	public List<TaskModel> createTask(TaskModel tm) {
+		List<TaskModel> createTask=tr.createTask(tm);  
+		return createTask;
 
-	public List<TaskModel> updateTask(TaskModel tm) {
-	    List<TaskModel> cretaedTaskDetails=tr.updateTask(tm);
-    	return cretaedTaskDetails;
 	}
+	public List<TaskModel> updateTask(TaskModel tm) {
+	    List<TaskModel> creteadTaskDetails=tr.updateTask(tm);
+    	return creteadTaskDetails;
+	}
+	
 
 	
 	

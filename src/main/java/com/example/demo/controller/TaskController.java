@@ -30,4 +30,10 @@ public class TaskController {
 		List<TaskModel> cretaedTaskDetails=ts.updateTask(tm);
 		return cretaedTaskDetails;
 	}
+	
+	@PostMapping("/createTask")
+	public List<TaskModel> createTask(@RequestBody  TaskModel tm) {
+		List<TaskModel> cretaedTaskDetails=ts.createTask(tm);
+		return cretaedTaskDetails;
+	}
 }
