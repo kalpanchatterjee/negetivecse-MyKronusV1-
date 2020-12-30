@@ -8,24 +8,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.userModel;
-import com.example.demo.service.userStatusService;
+import com.example.demo.model.UserModel;
+import com.example.demo.service.UserStatusService;
 
 @RestController
 @RequestMapping(value="mykronus/userStatus")
-public class userStatusController {
+public class UserStatusController {
 	
 	@Autowired
-	userStatusService ud;
+	UserStatusService ud;
 	 
 	
 	@PostMapping("/getUserStatusDetails")
-	public List<userModel> getUserStatusDetails(@RequestBody  userModel user) {
-		List<userModel> getDetails=ud.getUserStatusDetails(user);  
+	public List<UserModel> getUserStatusDetails(@RequestBody  UserModel user) {
+		List<UserModel> getDetails=ud.getUserStatusDetails(user);  
 		return getDetails;	
 	}
 	@PostMapping("/updateUserStatus")
-	public String updateUserStatus(@RequestBody  userModel user) {
+	public String updateUserStatus(@RequestBody  UserModel user) {
 		String getDetails=ud.updateUserStatus(user);  
 		return getDetails;	
 	}
