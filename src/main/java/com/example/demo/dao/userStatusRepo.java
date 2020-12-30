@@ -75,6 +75,7 @@ public class userStatusRepo {
 		SQL.append(" ORDER BY createdTimestamp ASC ");
 
 //		System.out.println(SQL.toString());
+		System.out.println("commiting!!!!!!!!");
 
 		List<userModel> userStatusList=jdbctm.query(SQL.toString(), BeanPropertyRowMapper.newInstance(userModel.class));
 		System.out.println(lighttpd);
