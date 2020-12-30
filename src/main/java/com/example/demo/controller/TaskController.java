@@ -23,7 +23,11 @@ public class TaskController {
 	@PostMapping("/getTaskDetails")
 	public List<TaskModel> getTaskDetails(@RequestBody TaskModel tm){
 		List<TaskModel> getTaskDetails=ts.getTaskDetails(tm);  
-		return getTaskDetails;	
-		
+		return getTaskDetails;		
+	}
+	@PostMapping("/updateTask")
+	public List<TaskModel> updateTask(@RequestBody  TaskModel tm) {
+		List<TaskModel> cretaedTaskDetails=ts.updateTask(tm);
+		return cretaedTaskDetails;
 	}
 }

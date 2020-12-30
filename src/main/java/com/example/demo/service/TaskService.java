@@ -19,6 +19,11 @@ public class TaskService {
 		return getTaskDetails;	
 	}
 
+	public List<TaskModel> updateTask(TaskModel tm) {
+	    List<TaskModel> cretaedTaskDetails=tr.updateTask(tm);
+    	return cretaedTaskDetails;
+	}
+
 	
 	
 }
