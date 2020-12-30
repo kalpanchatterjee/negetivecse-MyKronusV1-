@@ -415,29 +415,40 @@ public class TaskRepo {
 		}
 		return editedTaskDetails;
 	}
-	public List<TaskModel> updatePriority(TaskModel tm) {
-		
+	public List<TaskModel> updateTaskValues(TaskModel tm) {
+		String updateType = (tm.getUpdateType()!=null && !tm.getUpdateType().equals("")) ? tm.getUpdateType():"";
 		String taskId = tm.getTask_id();
 		String priority_id = tm.getPriority_id();
 		String sessUserId =tm.getUser_id();
-		List<TaskModel> updatePriorityTaskDetails =null;
+		List<TaskModel> updatedTaskValueDetails =null;
 		StringBuilder sql = new StringBuilder();
 		try {
 			sql.append(" UPDATE co_mykronus_tasks  ");
-			sql.append(" SET priority_id='"+priority_id+"'");
+			if(updateType.equals("priority")) {
+				sql.append(" SET priority_id='"+priority_id+"'");
+			}else if(updateType.equals("bill")){
+				String query="SELECT IFNULL(task_billable, 'N') as billableStatus FROM co_mykronus_tasks WHERE task_id="+taskId;
+				String billableStatus =jdbctm.queryForObject(query, String.class);
+				if(billableStatus.equals("N")) {
+					billableStatus="Y";
+				}else {
+					billableStatus="N";
+				}
+				sql.append(" SET task_billable='"+billableStatus+"' ");
+			}
 			sql.append(" , last_updated_date= '"+ Utilcollection.getDate()+"'");
 			sql.append(" , last_updated_timestamp=  '"+Utilcollection.getTimeStamp()+"'");
 			sql.append(" , last_updated_by="+sessUserId);
 			sql.append("  WHERE task_id="+taskId);
 			jdbctm.update(sql.toString());
-			updatePriorityTaskDetails= getTaskDetails(tm);
+			updatedTaskValueDetails= getTaskDetails(tm);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			
 		}
-		return updatePriorityTaskDetails;
+		return updatedTaskValueDetails;
 
 	}
 

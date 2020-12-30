@@ -48,10 +48,10 @@ public class TaskController {
 		return editedTaskDetails;
 	}
 
-	@PostMapping("/updatePriority")
-	public List<TaskModel> updatePriority(@RequestBody  TaskModel tm) {
-		List<TaskModel> updatePriority=ts.updatePriority(tm);
-		return updatePriority;
+	@PostMapping("/updateTaskValues")
+	public List<TaskModel> updateTaskValues(@RequestBody  TaskModel tm) {
+		List<TaskModel> updatedTaskValues=ts.updateTaskValues(tm);
+		return updatedTaskValues;
 	}
 
 }
