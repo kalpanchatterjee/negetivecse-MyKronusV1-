@@ -25,8 +25,8 @@ public class TaskService {
 
 	}
 	public List<TaskModel> updateTask(TaskModel tm) {
-	    List<TaskModel> creteadTaskDetails=tr.updateTask(tm);
-    	return creteadTaskDetails;
+	    List<TaskModel> updatedTaskDetails=tr.updateTask(tm);
+    	return updatedTaskDetails;
 	}
 	
 
