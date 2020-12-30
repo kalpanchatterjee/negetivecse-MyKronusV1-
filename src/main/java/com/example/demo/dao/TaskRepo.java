@@ -198,7 +198,7 @@ public class TaskRepo {
 				if(ctr != 0){
 					
 					Number key = keyHolder.getKey();
-					System.out.println("----> "+key.intValue());
+//					System.out.println("----> "+key.intValue());
 					StringBuilder sql1=new StringBuilder();
 					sql1.append("INSERT INTO co_mykronus_tasks_details (task_id,task_status,company_id,created_by,created_date,last_updated_date,last_updated_timestamp,last_updated_by,created_timestamp) ");
 					sql1.append("VALUES(?,?,?,?,?,?,?,?,?)");
