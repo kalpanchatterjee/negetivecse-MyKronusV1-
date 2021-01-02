@@ -2,7 +2,9 @@ package com.example.demo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -197,46 +199,46 @@ public class TaskRepo {
 						}else {
 							ps.setString  (7, dueDate);
 						}
-						
+
 						ps.setString(8, groupId);
-						
+
 						return ps;
 					}, keyHolder);
-				if(ctr != 0){
-					
-					Number key = keyHolder.getKey();
-//					System.out.println("----> "+key.intValue());
-					StringBuilder sql1=new StringBuilder();
-					sql1.append("INSERT INTO co_mykronus_tasks_details (task_id,task_status,company_id,created_by,created_date,last_updated_date,last_updated_timestamp,last_updated_by,created_timestamp) ");
-					sql1.append("VALUES(?,?,?,?,?,?,?,?,?)");
-					ctr = jdbctm.update(
-							connection -> {
-								PreparedStatement ps = connection.prepareStatement(sql1.toString(),Statement.RETURN_GENERATED_KEYS);
-								ps.setLong(1, key.intValue());
-								ps.setString(2, "Created");
-								ps.setString(3, companyId);
-								ps.setString(4,userId);
-								ps.setDate(5, Utilcollection.getDate());
-								ps.setDate(6, Utilcollection.getDate());
-								ps.setTimestamp(7, Utilcollection.getTimeStamp());
-								ps.setString(8, userId);
-								ps.setTimestamp(9, Utilcollection.getTimeStamp());
-								
-								
-								return ps;
-							}, keyHolder);
-							
-					tm.setTask_id( String.valueOf(key.intValue()));
-					
-				}
-			
+			if(ctr != 0){
+
+				Number key = keyHolder.getKey();
+				//					System.out.println("----> "+key.intValue());
+				StringBuilder sql1=new StringBuilder();
+				sql1.append("INSERT INTO co_mykronus_tasks_details (task_id,task_status,company_id,created_by,created_date,last_updated_date,last_updated_timestamp,last_updated_by,created_timestamp) ");
+				sql1.append("VALUES(?,?,?,?,?,?,?,?,?)");
+				ctr = jdbctm.update(
+						connection -> {
+							PreparedStatement ps = connection.prepareStatement(sql1.toString(),Statement.RETURN_GENERATED_KEYS);
+							ps.setLong(1, key.intValue());
+							ps.setString(2, "Created");
+							ps.setString(3, companyId);
+							ps.setString(4,userId);
+							ps.setDate(5, Utilcollection.getDate());
+							ps.setDate(6, Utilcollection.getDate());
+							ps.setTimestamp(7, Utilcollection.getTimeStamp());
+							ps.setString(8, userId);
+							ps.setTimestamp(9, Utilcollection.getTimeStamp());
+
+
+							return ps;
+						}, keyHolder);
+
+				tm.setTask_id( String.valueOf(key.intValue()));
+
+			}
+
 		}catch (Exception e) {
-			
+
 		}
 		List<TaskModel>createdTaskDetails=getTaskDetails(tm);
 		return createdTaskDetails;
 	}
-		
+
 
 
 	public List<TaskModel> updateTask(TaskModel tm) {
@@ -257,18 +259,18 @@ public class TaskRepo {
 				sql.append(" ,task_status='Inprogress'");
 
 			}else if(status.equals("Inprogress")) {
-				
+
 				sql.append(" UPDATE co_mykronus_tasks  ");
 				sql.append(" SET task_status='Inprogress' ");
 			}else if(status.equals("Paused")) {
-				
+
 				sql.append(" UPDATE co_mykronus_tasks  ");
 				sql.append(" SET task_end_date='"+Utilcollection.getDate()+"'");
 				sql.append(" , task_end_time='"+Utilcollection.getTime()+"'");
 				sql.append(" ,task_status='Paused'");
-				
+
 			}else if(status.equals("Completed")) {
-				
+
 				sql.append(" UPDATE co_mykronus_tasks  ");
 				sql.append(" SET task_status='Completed'");
 				sql.append(" , task_end_date='"+Utilcollection.getDate()+"'");
@@ -277,14 +279,14 @@ public class TaskRepo {
 			else if(status.equals("Cancel")) {
 				sql.append(" UPDATE co_mykronus_tasks  ");
 				sql.append(" SET status='N'");
-			
+
 			}
 			else if(status.equals("Reopen")) {
-				
+
 				sql.append(" UPDATE co_mykronus_tasks  ");
 				sql.append(" SET task_status='Inprogress' ");
 				sql.append(", elapsed_time=null");
-			
+
 			}else {
 				sql.append(" UPDATE co_mykronus_tasks  ");
 				sql.append(" SET task_name='"+taskName+"'");
@@ -293,46 +295,46 @@ public class TaskRepo {
 			sql.append(" ,last_updated_timestamp=  '"+Utilcollection.getTimeStamp()+"'");
 			sql.append(" , last_updated_by="+userId);
 			sql.append("  WHERE task_id="+tm.getTask_id());
-			
+
 			jdbctm.update(sql.toString());
 			String elapsed_time="";
 			if(status.equals("Paused")) {
-				 String query="SELECT MAX(created_timestamp) AS Tasktimestamp FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()  ; 
-				 String taskTime=jdbctm.queryForObject(query, String.class);
-				 
-				 query=" SELECT CONCAT('', TIMEDIFF( date_format('"+Utilcollection.getTimeStamp()+"', '%Y-%m-%d %H:%i:%s'), date_format('"+taskTime+"', '%Y-%m-%d %H:%i:%s') )) as act_time " ; 
-				 act_time=jdbctm.queryForObject(query, String.class);	
-				 
-				 query="SELECT task_detail_id FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()+" ORDER BY task_detail_id DESC LIMIT 1 "; 
-				 String latestDetailId=jdbctm.queryForObject(query, String.class);	
-				 
-				 String sqlInsert1="   UPDATE co_mykronus_tasks_details SET actual_time= '"+act_time+"', task_status_stop_timestamp=  '"+Utilcollection.getTimeStamp()+"', last_updated_by="+userId+"  WHERE task_detail_id="+latestDetailId;
-				 jdbctm.update(sqlInsert1);
+				String query="SELECT MAX(created_timestamp) AS Tasktimestamp FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()  ; 
+				String taskTime=jdbctm.queryForObject(query, String.class);
+
+				query=" SELECT CONCAT('', TIMEDIFF( date_format('"+Utilcollection.getTimeStamp()+"', '%Y-%m-%d %H:%i:%s'), date_format('"+taskTime+"', '%Y-%m-%d %H:%i:%s') )) as act_time " ; 
+				act_time=jdbctm.queryForObject(query, String.class);	
+
+				query="SELECT task_detail_id FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()+" ORDER BY task_detail_id DESC LIMIT 1 "; 
+				String latestDetailId=jdbctm.queryForObject(query, String.class);	
+
+				String sqlInsert1="   UPDATE co_mykronus_tasks_details SET actual_time= '"+act_time+"', task_status_stop_timestamp=  '"+Utilcollection.getTimeStamp()+"', last_updated_by="+userId+"  WHERE task_detail_id="+latestDetailId;
+				jdbctm.update(sqlInsert1);
 			}
 			if(status.equals("Completed")) {
 				String query="SELECT task_status FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()+" ORDER BY task_detail_id DESC LIMIT 1 "; 
 				String status_prev=jdbctm.queryForObject(query, String.class);
 				if(!status_prev.equals("Paused") && !status_prev.equals("Created") ) {
-					 query="SELECT MAX(created_timestamp) AS Tasktimestamp FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id();
-					 String max_timestamp=jdbctm.queryForObject(query, String.class);
-					 
-					 query=" SELECT CONCAT('',TIMEDIFF( date_format('"+Utilcollection.getTimeStamp()+"', '%Y-%m-%d %H:%i:%s') , date_format('"+max_timestamp+"', '%Y-%m-%d %H:%i:%s') )) as act_time " ; 
-					 act_time=jdbctm.queryForObject(query, String.class);
-					 
-					 query="SELECT task_detail_id FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()+" ORDER BY task_detail_id DESC LIMIT 1 "; 
-					 String latestDetailId =jdbctm.queryForObject(query, String.class);
-					 
-					 String sqlInsert1="   UPDATE co_mykronus_tasks_details SET actual_time= '"+act_time+"' , task_status_stop_timestamp=  '"+Utilcollection.getTimeStamp()+"', last_updated_by="+userId+"    WHERE task_detail_id="+latestDetailId;
-					 jdbctm.update(sqlInsert1);
-			 	}else {
-			 		query="SELECT task_detail_id FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()+" ORDER BY task_detail_id DESC LIMIT 1 "; 
-			 		String latestDetailId =jdbctm.queryForObject(query, String.class);
-			 		
-			 		String sqlInsert1="   UPDATE co_mykronus_tasks_details SET  task_status_stop_timestamp=  '"+Utilcollection.getTimeStamp()+"', last_updated_by="+userId+"    WHERE task_detail_id="+latestDetailId;
-			 		jdbctm.update(sqlInsert1);
-			 	}
+					query="SELECT MAX(created_timestamp) AS Tasktimestamp FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id();
+					String max_timestamp=jdbctm.queryForObject(query, String.class);
+
+					query=" SELECT CONCAT('',TIMEDIFF( date_format('"+Utilcollection.getTimeStamp()+"', '%Y-%m-%d %H:%i:%s') , date_format('"+max_timestamp+"', '%Y-%m-%d %H:%i:%s') )) as act_time " ; 
+					act_time=jdbctm.queryForObject(query, String.class);
+
+					query="SELECT task_detail_id FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()+" ORDER BY task_detail_id DESC LIMIT 1 "; 
+					String latestDetailId =jdbctm.queryForObject(query, String.class);
+
+					String sqlInsert1="   UPDATE co_mykronus_tasks_details SET actual_time= '"+act_time+"' , task_status_stop_timestamp=  '"+Utilcollection.getTimeStamp()+"', last_updated_by="+userId+"    WHERE task_detail_id="+latestDetailId;
+					jdbctm.update(sqlInsert1);
+				}else {
+					query="SELECT task_detail_id FROM co_mykronus_tasks_details  WHERE task_id="+tm.getTask_id()+" ORDER BY task_detail_id DESC LIMIT 1 "; 
+					String latestDetailId =jdbctm.queryForObject(query, String.class);
+
+					String sqlInsert1="   UPDATE co_mykronus_tasks_details SET  task_status_stop_timestamp=  '"+Utilcollection.getTimeStamp()+"', last_updated_by="+userId+"    WHERE task_detail_id="+latestDetailId;
+					jdbctm.update(sqlInsert1);
+				}
 			}
-			
+
 			if(status.equals("Reopen") || status.equals("Created")) {
 				status="Inprogress";
 			}
@@ -355,10 +357,10 @@ public class TaskRepo {
 					String sqlInsert1="   UPDATE co_mykronus_tasks SET elapsed_time= '"+elapsed_time+"' WHERE task_id="+tm.getTask_id();
 					jdbctm.update(sqlInsert1);
 				}
-			
+
 			}
-			
-			 updatedTaskDetails=getTaskDetails(tm);	
+
+			updatedTaskDetails=getTaskDetails(tm);	
 		} catch (Exception e) {
 		}
 		return updatedTaskDetails;
@@ -397,7 +399,7 @@ public class TaskRepo {
 		String groupId = (tm.getGroup_id()!=null && !tm.getGroup_id().equals("")) ? tm.getGroup_id() :"";
 		String dueDate = (tm.getTaskDueDate()!=null && !tm.getTaskDueDate().equals("")) ? tm.getTaskDueDate() :"";
 		String taskName=(tm.getTask_name()!=null && !tm.getTask_name().equals("")) ? tm.getTask_name() :"";
-		
+
 		List<TaskModel> editedTaskDetails=null;
 		try {
 			sql.append(" UPDATE co_mykronus_tasks  ");
@@ -435,6 +437,9 @@ public class TaskRepo {
 					billableStatus="N";
 				}
 				sql.append(" SET task_billable='"+billableStatus+"' ");
+			}else if(updateType.equals("privacy")) {
+				String taskPrivacy = tm.getTaskPrivacy();
+				sql.append(" SET task_type='"+taskPrivacy+"'");
 			}
 			sql.append(" , last_updated_date= '"+ Utilcollection.getDate()+"'");
 			sql.append(" , last_updated_timestamp=  '"+Utilcollection.getTimeStamp()+"'");
@@ -442,14 +447,103 @@ public class TaskRepo {
 			sql.append("  WHERE task_id="+taskId);
 			jdbctm.update(sql.toString());
 			updatedTaskValueDetails= getTaskDetails(tm);
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			
+
 		}
 		return updatedTaskValueDetails;
 
 	}
+
+	public List<TaskModel> updateTaskActualHour(TaskModel tm) {
+		String result="faliure";
+		List<TaskModel> updateTaskActualHourDetails=new ArrayList<TaskModel>();
+		String taskDetailId = (tm.getTask_detail_id() == null || tm.getTask_detail_id().equals("") ) ? "" :tm.getTask_detail_id();
+		String taskId = tm.getTask_id();
+		String totActHour = tm.getToActHour();
+		String actHourUpdateFlag = (tm.getActHourUpdateFlag() == null || tm.getActHourUpdateFlag().equals("") ) ? "yes" : tm.getActHourUpdateFlag();
+		String userId=tm.getUser_id();
+		
+		if(taskDetailId.equals("")){
+			tm.setResult(result);
+			updateTaskActualHourDetails.add(tm);
+			return updateTaskActualHourDetails;
+			
+		}
+		StringBuilder sql = new StringBuilder();
+		String localoffsetTimeZone = (tm.getLocaloffsetTimeZone()!=null && !tm.getLocaloffsetTimeZone().equals("")) ? tm.getLocaloffsetTimeZone() :"";
+		if( localoffsetTimeZone.equals("")){
+			localoffsetTimeZone="19800";
+		}
+		localoffsetTimeZone=Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
+		boolean updateFlag = true;
+		try {
+			if(actHourUpdateFlag.equals("no")) {
+				sql.append(" SELECT "); 
+				sql.append("  DATE_FORMAT(CONVERT_TZ(cmtd.task_status_stop_timestamp,'"+Utilcollection.getServerTimeZone()+"', ifnull(cu.user_timezone, '"+localoffsetTimeZone+"') ), '%Y-%m-%d') AS status_stop_date ");
+				sql.append(" FROM co_mykronus_tasks_details cmtd ");
+				sql.append(" JOIN co_users cu ON cu.user_id = cmtd.created_by ");
+				sql.append(" WHERE cmtd.task_detail_id=").append(taskDetailId);
+				String statusStopDate=jdbctm.queryForObject(sql.toString(), String.class);
+
+				sql = new StringBuilder("");
+				sql.append(" SELECT "); 
+				sql.append(" IFNULL(TIME_FORMAT(SEC_TO_TIME(SUM(IFNULL(TIME_TO_SEC(cuud.total_work_hours),0))) , '%H:%i'),  '-' )  AS TotalHrs ");
+				sql.append(" FROM co_user_usage_details cuud ");
+				sql.append(" JOIN co_users cu on cu.user_id = cuud.user_id ");
+				sql.append(" WHERE cuud.user_id="+userId+" and DATE_FORMAT(CONVERT_TZ(cuud.user_usage_date_timestamp, '"+Utilcollection.getServerTimeZone()+"', ifnull(cu.user_timezone, '"+localoffsetTimeZone+"')), '%Y-%m-%d')  = '"+statusStopDate+"' ");
+				String totalWorkHours=jdbctm.queryForObject(sql.toString(), String.class);
+				sql = new StringBuilder("");
+				sql.append(" SELECT IF(TIME_TO_SEC(time_format('"+totActHour+"', '%H:%i') ) > TIME_TO_SEC(time_format('"+totalWorkHours+"', '%H:%i') ) ,'Y','N') as ExceedStatus");
+				String ExceedStatus =jdbctm.queryForObject(sql.toString(), String.class);
+				if(ExceedStatus.equals("Y")) {
+					result = "exceeded";
+					tm.setResult(result);
+					updateTaskActualHourDetails.add(tm);
+					return updateTaskActualHourDetails;
+					
+				}else {
+					updateFlag = true;
+				}
+
+			}else {
+				updateFlag = true;
+			}
+			
+			
+			
+			if(updateFlag) {
+				sql = new StringBuilder("");
+				sql.append(" UPDATE co_mykronus_tasks_details  ");
+				sql.append(" SET actual_time='"+totActHour+"' ");
+				sql.append(" , actual_time_modified='Y' ");
+				sql.append(" , last_updated_date= '"+Utilcollection.getDate()+"'");
+				sql.append(" , last_updated_timestamp=  '"+Utilcollection.getTimeStamp()+"'");
+				sql.append(" , last_updated_by="+userId);
+				sql.append("  WHERE task_detail_id="+taskDetailId);
+				jdbctm.update(sql.toString());
+				
+				
+				sql = new StringBuilder("");
+				sql.append(" UPDATE co_mykronus_tasks  ");
+				sql.append(" SET actual_time_modified='Y' ");
+				sql.append(" , last_updated_date= '"+Utilcollection.getDate()+"'");
+				sql.append(" , last_updated_timestamp=  '"+Utilcollection.getTimeStamp()+"'");
+				sql.append(" , last_updated_by="+userId);
+				sql.append("  WHERE task_id="+taskId);
+				jdbctm.update(sql.toString());
+				updateTaskActualHourDetails=getTaskDetails(tm);
+			
+				
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return updateTaskActualHourDetails;
+	}
+
 
 }
