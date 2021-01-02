@@ -43,7 +43,35 @@ public class TaskModel {
 	private String task_detail_id;
 	private String actual_time;
 	private String updateType;
+	public String taskPrivacy;
+	public String toActHour;
+	public String actHourUpdateFlag;
+	public String result;
 	
+	public String getResult() {
+		return result;
+	}
+	public void setResult(String result) {
+		this.result = result;
+	}
+	public String getActHourUpdateFlag() {
+		return actHourUpdateFlag;
+	}
+	public void setActHourUpdateFlag(String actHourUpdateFlag) {
+		this.actHourUpdateFlag = actHourUpdateFlag;
+	}
+	public String getToActHour() {
+		return toActHour;
+	}
+	public void setToActHour(String toActHour) {
+		this.toActHour = toActHour;
+	}
+	public String getTaskPrivacy() {
+		return taskPrivacy;
+	}
+	public void setTaskPrivacy(String taskPrivacy) {
+		this.taskPrivacy = taskPrivacy;
+	}
 	public String getUpdateType() {
 		return updateType;
 	}

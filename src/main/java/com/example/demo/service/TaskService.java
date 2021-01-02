@@ -44,6 +44,11 @@ public class TaskService {
 		return updatedTaskValues;
 
 	}
+
+	public List<TaskModel> updateTaskActualHour(TaskModel tm) {
+		List<TaskModel> updateTaskActualHour=tr.updateTaskActualHour(tm);
+		return updateTaskActualHour;
+	}
 	
 
 	

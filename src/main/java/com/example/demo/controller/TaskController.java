@@ -53,5 +53,10 @@ public class TaskController {
 		List<TaskModel> updatedTaskValues=ts.updateTaskValues(tm);
 		return updatedTaskValues;
 	}
+	@PostMapping("/updateTaskActualHour")
+	public List<TaskModel> updateTaskActualHour(@RequestBody  TaskModel tm) {
+		List<TaskModel> updateTaskActualHour=ts.updateTaskActualHour(tm);
+		return updateTaskActualHour;
+	}
 
 }
