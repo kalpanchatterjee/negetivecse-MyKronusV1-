@@ -17,6 +17,13 @@ public class ExpenseModel {
 	private String created_time;
 	private String localOffsetTime;
 	private String menu;
+	private String result;
+	 public String getResult() {
+		return result;
+	}
+	public void setResult(String result) {
+		this.result = result;
+	}
 	public String getMenu() {
 		return menu;
 	}

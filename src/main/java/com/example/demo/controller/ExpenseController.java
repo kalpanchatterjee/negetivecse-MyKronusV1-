@@ -22,4 +22,19 @@ public class ExpenseController {
 		List<ExpenseModel> expenselist=es.expenselist(em);  
 		return expenselist;		
 	}
+	@PostMapping("/updateexpense")
+	public List<ExpenseModel> updateexpense(@RequestBody ExpenseModel em){
+		List<ExpenseModel> updateexpense=es.updateexpense(em);  
+		return updateexpense;		
+	}
+	@PostMapping("/createexpense")
+	public List<ExpenseModel> createexpense(@RequestBody ExpenseModel em){
+		List<ExpenseModel> createexpense=es.createexpense(em);  
+		return createexpense;		
+	}
+	@PostMapping("/deleteexpense")
+	public List<ExpenseModel> deleteexpense(@RequestBody ExpenseModel em){
+		List<ExpenseModel> deleteexpense=es.deleteexpense(em);  
+		return deleteexpense;		
+	}
 }

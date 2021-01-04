@@ -35,19 +35,25 @@ public class GroupRepo {
 		localoffsetTimeZone = Utilcollection.getlocalTimeInHrs(localoffsetTimeZone);
 		
 		StringBuilder sql=new StringBuilder();
-		sql.append(" SELECT CONCAT(cu.user_first_name,' ',cu.user_last_name)AS created_by, cmg.group_id, cmg.group_name, IFNULL(cmg.group_desc,'') AS group_desc, cmg.company_id, cmg.group_code,");
-		sql.append(" IFNULL( DATE_FORMAT(CONVERT_TZ(cmg.created_timestamp, '"+Utilcollection.getServerTimeZone()+"', ifnull(cu.user_timezone, '"+localoffsetTimeZone+"')), '%b %d %Y'),'') AS 'created_date',");
-		sql.append(" IFNULL( DATE_FORMAT(CONVERT_TZ(cmg.created_timestamp, '"+Utilcollection.getServerTimeZone()+"', ifnull(cu.user_timezone, '"+localoffsetTimeZone+"')), '%h:%i %p'),'') AS 'created_time'");
-		sql.append(" FROM co_mykronus_groups cmg");
-		sql.append(" JOIN co_users cu");
-		sql.append(" ON cu.user_id=cmg.created_by");
-		sql.append(" WHERE cmg.company_id="+companyId);
-		if(group_id!=0) {
-			 sql.append(" AND cmg.group_id="+group_id); 
-		 }
-		sql.append(" AND cmg.status='Y' ");
-		sql.append(" ORDER BY cmg.created_timestamp DESC ");
-		System.out.println(sql.toString());
+		try {
+			sql.append(" SELECT CONCAT(cu.user_first_name,' ',cu.user_last_name)AS created_by, cmg.group_id, cmg.group_name, IFNULL(cmg.group_desc,'') AS group_desc, cmg.company_id, cmg.group_code,");
+			sql.append(" IFNULL( DATE_FORMAT(CONVERT_TZ(cmg.created_timestamp, '"+Utilcollection.getServerTimeZone()+"', ifnull(cu.user_timezone, '"+localoffsetTimeZone+"')), '%b %d %Y'),'') AS 'created_date',");
+			sql.append(" IFNULL( DATE_FORMAT(CONVERT_TZ(cmg.created_timestamp, '"+Utilcollection.getServerTimeZone()+"', ifnull(cu.user_timezone, '"+localoffsetTimeZone+"')), '%h:%i %p'),'') AS 'created_time'");
+			sql.append(" FROM co_mykronus_groups cmg");
+			sql.append(" JOIN co_users cu");
+			sql.append(" ON cu.user_id=cmg.created_by");
+			sql.append(" WHERE cmg.company_id="+companyId);
+			if(group_id!=0) {
+				 sql.append(" AND cmg.group_id="+group_id); 
+			 }
+			sql.append(" AND cmg.status='Y' ");
+			sql.append(" ORDER BY cmg.created_timestamp DESC ");
+			System.out.println(sql.toString());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		List<GroupModel> grouplist = jdbctm.query(sql.toString(), BeanPropertyRowMapper.newInstance(GroupModel.class));
 		
@@ -57,7 +63,7 @@ public class GroupRepo {
 	public List<GroupModel> createGroup(GroupModel gm) {
 		int userId = gm.getUser_id();
 		int companyId=gm.getCompany_id();
-		System.out.println("----------abc");
+		
 		String localoffsetTimeZone = gm.getLocalOffsetTime() !=null ? gm.getLocalOffsetTime() :"";
 		if( localoffsetTimeZone.equals("")){
 			localoffsetTimeZone="19800";
@@ -93,10 +99,10 @@ public class GroupRepo {
 						
 						return ps;
 					}, keyHolder);
-			System.out.println("-------yuc"+keyHolder.getKey().intValue());
+			//System.out.println("-------yuc"+keyHolder.getKey().intValue());
 			gm.setGroup_id(keyHolder.getKey().intValue());
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		List<GroupModel> createGroupDetails = listGroup(gm);
 		return createGroupDetails;
@@ -130,7 +136,7 @@ public class GroupRepo {
 			 jdbctm.update(sql.toString());
 			 updateGroupDetails = listGroup(gm);
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		 
