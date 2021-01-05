@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +17,10 @@ import com.example.demo.service.TaskService;
 @RequestMapping(value="mykronus/tasks")
 public class TaskController {
 	
-	
+	private static final org.slf4j.Logger log = LoggerFactory.getLogger(Exception.class);
+
+
+
 	@Autowired
 	TaskService ts;
 	
@@ -56,6 +61,7 @@ public class TaskController {
 	@PostMapping("/updateTaskActualHour")
 	public List<TaskModel> updateTaskActualHour(@RequestBody  TaskModel tm) {
 		List<TaskModel> updateTaskActualHour=ts.updateTaskActualHour(tm);
+		System.out.println("---");
 		return updateTaskActualHour;
 	}
 
