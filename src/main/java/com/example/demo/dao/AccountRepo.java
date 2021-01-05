@@ -126,7 +126,6 @@ public class AccountRepo {
 
 
 	public List<AccountModel> createAccount(AccountModel am) {
-		String presentDate = (am.getPresentDate()!=null && !am.getPresentDate().equals("")) ? am.getPresentDate() :"";
 		String userId=am.getUser_id();
 		String companyId=am.getCompany_id();
 		List<AccountModel> createdAccountDetails=null;
